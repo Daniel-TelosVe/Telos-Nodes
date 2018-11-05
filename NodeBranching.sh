@@ -122,7 +122,7 @@ cd $CHECKOUT
 git checkout $CHECKOUT
 git submodule update --init --recursive
 yes '1' | ./telos_build.sh
-mkdir $CONTROL/$CHECKOUT 
+mkdir -p $CONTROL/$CHECKOUT 
 echo "$PROGRAMS/nodeos/nodeos --p2p-listen-endpoint 0.0.0.0:${P2P} --http-server-address 127.0.0.1:${HTTP} --config-dir ${CONFIGDIR} --data-dir ${DATADIR} " '$@' " &> "$CONTROL/$CHECKOUT/"tlos.log &  echo " '$!' " > " $CONTROL/$CHECKOUT/"nodeos.pid" >> $CONTROL/$CHECKOUT/nodeos.sh 
 echo "$PROGRAMS/teclos/teclos -u http://127.0.0.1:${HTTP} ---wallet-url http://127.0.0.1:${WALLET} " '$@'  >> $CONTROL/$CHECKOUT/teclos.sh
 echo "$PROGRAMS/tkeosd/tkeosd --http-server-address http://127.0.0.1:${WALLET} " '$@' >> $CONTROL/$CHECKOUT/tkeosd.sh
@@ -138,7 +138,7 @@ yes | sudo apt-get upgrade
 sudo timedatectl set-ntp no
 yes | sudo apt-get install ntp
 ### Create Telos Home and make  usr propietary
-sudo mkdir /opt/Nodes
+sudo mkdir -p /opt/Nodes
 sudo chown $USER /opt/Nodes
 
 sudo dd of=start.sh << 'EOF'
