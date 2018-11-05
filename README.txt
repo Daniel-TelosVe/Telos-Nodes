@@ -36,5 +36,5 @@ Usage:
 ./NodeBranching.sh Initialize
 #Then we can use the wizard to build nodeos 
 ./NodeBranching.sh Wizard
-#After building you can use the provided config.ini placed at your $DEFAULT directory and change respective configurations
+#After building you can use the provided config.ini and genesis.json placed at your $DEFAULT directory and change respective configurations
 
