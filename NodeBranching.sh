@@ -65,9 +65,7 @@ function parse_args
   # validate required args
   
   if [[ -z "${positional_1}"  ]]; then
-      echo "No Initialize or Setup positional argument given"
-      usage
-      exit;
+     menu;
   fi
   
   # set defaults
@@ -236,7 +234,6 @@ positional_1=$(whiptail --title "Menu" --menu "Choose an option" 25 78 5 \
 "Wizard" "Run the wizard tool." \
 "Initialize" "First run only ." \
 "Version" "Select which version to control." 3>&1 1>&2 2>&3);
-fun "$@";
 }
 
 function fun
