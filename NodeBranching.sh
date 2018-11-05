@@ -1,7 +1,7 @@
 #!/bin/bash
 #Daniel Uzcátegui
 #Telos-Venezula
-source ~/.bashrc
+source ~/.nodeviroment
 set -e
 
 function usage
@@ -102,10 +102,10 @@ function run
 sudo mkdir -p $CONTROL $DEFAULTS $CONFIGDIR $DATADIR
 sudo chown $USER $CONTROL $DEFAULTS $CONFIGDIR $DATADIR
   
-echo "export CONTROL=${CONTROL}" >> ~/.bashrc
-echo "export DEFAULTS=${DEFAULTS}" >> ~/.bashrc
-echo "export CONFIGDIR=${CONFIGDIR}" >> ~/.bashrc
-echo "export DATADIR=${DATADIR}" >> ~/.bashrc
+echo "export CONTROL=${CONTROL}" >> ~/.nodeviroment
+echo "export DEFAULTS=${DEFAULTS}" >> ~/.nodeviroment
+echo "export CONFIGDIR=${CONFIGDIR}" >> ~/.nodeviroment
+echo "export DATADIR=${DATADIR}" >> ~/.nodeviroment
   
 PROGRAMS=/opt/Nodes/$CHECKOUT/build/programs
 
@@ -127,7 +127,7 @@ echo "$PROGRAMS/nodeos/nodeos --p2p-listen-endpoint 0.0.0.0:${P2P} --http-server
 echo "$PROGRAMS/teclos/teclos -u http://127.0.0.1:${HTTP} ---wallet-url http://127.0.0.1:${WALLET} " '$@'  >> $CONTROL/$CHECKOUT/teclos.sh
 echo "$PROGRAMS/tkeosd/tkeosd --http-server-address http://127.0.0.1:${WALLET} " '$@' >> $CONTROL/$CHECKOUT/tkeosd.sh
 chmod +x $CONTROL/$CHECKOUT/teclos.sh $CONTROL/$CHECKOUT/nodeos.sh $CONTROL/$CHECKOUT/tkeosd.sh
-echo "export NODESET=${CONTROL}/${CHECKOUT} " >> ~/.bashrc
+echo "export NODESET=${CONTROL}/${CHECKOUT} " >> ~/.nodeviroment
 wget -o $DEFAULTS/genesis.json $GENESIS
 }
 
@@ -143,29 +143,29 @@ sudo chown $USER /opt/Nodes
 
 sudo dd of=start.sh << 'EOF'
 #!/bin/bash
-source ~/.bashrc
+source ~/.nodeviroment
 stopnode
 $NODESET/nodeos.sh "$@"
 EOF
 sudo dd of=nodeos << 'EOF'
 #!/bin/bash
-source ~/.bashrc
+source ~/.nodeviroment
 $NODESET/nodeos.sh "$@"
 EOF
 sudo dd of=teclos << 'EOF'
 #!/bin/bash
-source ~/.bashrc
+source ~/.nodeviroment
 $NODESET/teclos.sh "$@"
 EOF
 sudo dd of=tkeosd << 'EOF'
 #!/bin/bash
-source ~/.bashrc
+source ~/.nodeviroment
 $NODESET/tkeosd.sh "$@"
 EOF
 #
 sudo dd of=stop.sh << 'EOF'
 #!/bin/bash
-source ~/.bashrc
+source ~/.nodeviroment
 DIR=$NODESET
     if [ -f $DIR"/nodeos.pid" ]; then
         pid=$(cat $DIR"/nodeos.pid")
@@ -185,7 +185,7 @@ DIR=$NODESET
 EOF
 sudo dd of=backupnode << 'EOF'
 #!/bin/bash
-source ~/.bashrc
+source ~/.nodeviroment
 nohup stopnode $
 cp -r $DATADIR/blocks $DATADIR/blockstemp
 cp -r $DATADIR/state $DATADIR/statetemp
@@ -198,12 +198,12 @@ rm -rf $DATADIR/statetemp
 EOF
 sudo dd of=showlog << 'EOF'
 #!/bin/bash
-source ~/.bashrc
+source ~/.nodeviroment
 tail -f ${NODESET}/tlos.log
 EOF
 sudo dd of=version << 'EOF'
 #!/bin/bash
-source ~/.bashrc
+source ~/.nodeviroment
 ${HOME}/Telos-Nodes/NodeBranching.sh Version
 EOF
 
@@ -214,7 +214,7 @@ function version
 {
 	 export Directory=$(ls -lhp -1 -d $CONTROL/*/ | awk -F ' ' ' { print $9 " " $5 } ')
      export newpath=$(whiptail --menu "Select nodeos version to control" 40 50 30 --cancel-button Cancel --ok-button Select $Directory 3>&1 1>&2 2>&3)
-     echo "export NODESET=${newpath}" >> ~/.bashrc
+     echo "export NODESET=${newpath}" >> ~/.nodeviroment
 }
 function Wizard
 {
