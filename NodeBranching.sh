@@ -213,8 +213,8 @@ function Wizard
 
 CHECKOUT=$(whiptail --inputbox "Enter Github Telos branch to build" 8 78 stage3.0 --title " Dialog" 3>&1 1>&2 2>&3); 
 WALLET=$(whiptail --inputbox "Port to use for tkeosd" 8 78 8900 --title " Dialog" 3>&1 1>&2 2>&3);
-P2P=$(whiptail --inputbox "Port to use for P2P" 8 78 8900 --title " Dialog" 3>&1 1>&2 2>&3);
-HTTP=$(whiptail --inputbox "Port to use for HTTP" 8 78 8900 --title " Dialog" 3>&1 1>&2 2>&3);
+P2P=$(whiptail --inputbox "Port to use for P2P" 8 78 9876 --title " Dialog" 3>&1 1>&2 2>&3);
+HTTP=$(whiptail --inputbox "Port to use for HTTP" 8 78 8888 --title " Dialog" 3>&1 1>&2 2>&3);
 CONFIGDIR=$(whiptail --inputbox " Directory of your config.ini file" 8 78 /home/"$USER"/control/defaults --title " Dialog" 3>&1 1>&2 2>&3);
 DATADIR=$(whiptail --inputbox "Directory of Blocks/state" 8 78 /data --title " Dialog" 3>&1 1>&2 2>&3);
 CONTROL=$(whiptail --inputbox "Directory of control scripts" 8 78 /home/${USER}/control/scripts --title " Dialog" 3>&1 1>&2 2>&3);
