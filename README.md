@@ -18,3 +18,4 @@ usage: ./NodeBranching.sh [Initialize, Setup or Version] [OPTIONS]
   -d | --DATADIR            : Directory of Blocks/state  defaults to /data
   -f | --CONTROL            : Directory of control scripts defaults /home/Telos/control/scripts
   -h | --help              : This message
+
