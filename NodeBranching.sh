@@ -48,6 +48,7 @@ function parse_args
 		  -t | --HTTP)              HTTP="$2";      shift;;
 		  -c | --CONFIGDIR )        CONFIGDIR="$2";      shift;;
 		  -f | --CONTROL )           CONTROL="$2";      shift;;
+		  -g | --GENESIS)             GENESIS="$2";      shift;;
           -h | --help )                 usage;                   exit;; # quit and show usage
           * )                           args+=("$1")             # if no match, add it to the positional args
       esac
