@@ -6,7 +6,7 @@
    ╚═╝   ╚══════╝╚══════╝ ╚═════╝ ╚══════╝        ╚═══╝  ╚══════╝╚═╝  ╚═══╝╚══════╝╚══════╝ ╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝
                                            CREATING A BETTER WORLD, BLOCK BY BLOCK.                                                                                              
 
-usage: ./NodeBranching.sh [Initialize, Setup or Version] [OPTIONS]
+./NodeBranching.sh [Initialize, Setup or Version] [OPTIONS]
  Positional (Initialize, Setup, Version,Wizard)
  OPTIONS:
  [Initialize] first setup run once
@@ -19,7 +19,9 @@ usage: ./NodeBranching.sh [Initialize, Setup or Version] [OPTIONS]
   -t | --HTTP               : Nodeos Http Port default 8888
   -d | --DATADIR            : Directory of Blocks/state  defaults to /data
   -f | --CONTROL            : Directory of control scripts defaults /home/Telos/control/scripts
+  -g | --GENESIS            : Genesis URL
   -h | --help               : This message
+
 
 #This Tool helps sysadmins to build and Manage diferent Telos versions
 #It will incorporate the following commands:
@@ -32,6 +34,8 @@ usage: ./NodeBranching.sh [Initialize, Setup or Version] [OPTIONS]
 #version Wizard tool to select which nodeos version to manage
 
 Usage:
+#Clone the repository in your $HOME directory 
+git clone https://github.com/Daniel-TelosVe/Telos-Nodes
 #First we need to Setup the machine(update, upgrade, setup ntpd, etc)
 ./NodeBranching.sh Initialize
 #Then we can use the wizard to build nodeos 
