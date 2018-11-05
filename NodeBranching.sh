@@ -15,12 +15,12 @@ function usage
    ╚═╝   ╚══════╝╚══════╝ ╚═════╝ ╚══════╝        ╚═══╝  ╚══════╝╚═╝  ╚═══╝╚══════╝╚══════╝ ╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝
                                            CREATING A BETTER WORLD, BLOCK BY BLOCK.                                                                                                                          
 ";
-    echo "usage: ./NodeBranching.sh [Initialize, Setup or Version] [OPTIONS]  ";
-    echo " Positional (Initialize, Setup, Version,Wizard)";
+    echo "usage: ./NodeBranching.sh [Initialize, Setup , Version , Wizard] [OPTIONS]  ";
 	echo " OPTIONS: ";
 	echo " [Initialize] first setup run once";
 	echo " [Setup] Build Nodeos and creates start and stop scripts";
 	echo " [Version] Select which version to control";
+	echo " [Wizard] Wizard setup";
     echo "  -a | --CHECKOUT           : git branch name";
 	echo "  -w | --WALLET             : Port to use for tkeosd defaults 8900";
 	echo "  -c | --CONFIGDIR          : Directory of your config.ini file defaults /home/"$USER"/control/defaults";
@@ -28,6 +28,7 @@ function usage
 	echo "  -t | --HTTP               : Nodeos Http Port default 8888";
 	echo "  -d | --DATADIR            : Directory of Blocks/state  defaults to /data";
 	echo "  -f | --CONTROL            : Directory of control scripts defaults /home/${USER}/control/scripts";
+	echo "  -g | --GENESIS            : Genesis URL";
 	echo "  -h | --help               : This message";
 	
 }
@@ -43,6 +44,8 @@ function parse_args
           -a | --CHECKOUT )               CHECKOUT="$2";             shift;;
 		  -w | --WALLET )        WALLET="$2";      shift;;
 		  -d | --DATADIR )        DATADIR="$2";      shift;;
+		  -p | --P2P)              P2P="$2";      shift;;
+		  -t | --HTTP)              HTTP="$2";      shift;;
 		  -c | --CONFIGDIR )        CONFIGDIR="$2";      shift;;
 		  -f | --CONTROL )           CONTROL="$2";      shift;;
           -h | --help )                 usage;                   exit;; # quit and show usage
@@ -79,22 +82,35 @@ function parse_args
   if [[ -z "${CONTROL}" ]]; then
       CONTROL="/home/${USER}/control/scripts";
   fi
+  if [[ -z "${P2P}" ]]; then
+      P2P="9876";
+  fi
+  if [[ -z "${HTTP}" ]]; then
+      HTTP="8888";
+  fi
+  if [[ -z "${GENESIS}" ]]; then
+      GENESIS="http://testnet.telosfoundation.io/assets/files/genesis.json";
+  fi
+  
 }
 
 
 function run
 {
   parse_args "$@"
+mkdir -p $CONTROL $DEFAULTS $CONFIGDIR $DATADIR
 
+  
+echo "export CONTROL=${CONTROL}" >> ~/.bashrc
+echo "export DEFAULTS=${DEFAULTS}" >> ~/.bashrc
+echo "export CONFIGDIR=${CONFIGDIR}" >> ~/.bashrc
+echo "export DATADIR=${DATADIR}" >> ~/.bashrc
+  
 PROGRAMS=/opt/Nodes/$CHECKOUT/build/programs
 
 #  echo "positional arg 1: $positional_1"
 #  echo "positional arg 2: $positional_2"
 
-if [[ -z "${CONTROL}"  ]]; then
-      echo "You need to Initialize first, run ./NodeBranching.sh Initialize"
-      exit;
-fi
 if [[ -z "${CHECKOUT}"  ]]; then
       echo "No Checkout provided so I will exit"
       exit;
@@ -111,6 +127,7 @@ echo "$PROGRAMS/teclos/teclos -u http://127.0.0.1:${HTTP} ---wallet-url http://1
 echo "$PROGRAMS/tkeosd/tkeosd --http-server-address http://127.0.0.1:${WALLET} " '$@' >> $CONTROL/$CHECKOUT/tkeosd.sh
 chmod +x $CONTROL/$CHECKOUT/teclos.sh $CONTROL/$CHECKOUT/nodeos.sh $CONTROL/$CHECKOUT/tkeosd.sh
 echo "export NODESET=${CONTROL}/${CHECKOUT} " >> ~/.bashrc
+wget -o $DEFAULTS/genesis.json $GENESIS
 }
 
 function Initial
@@ -122,22 +139,27 @@ yes | sudo apt-get install ntp
 ### Create Telos Home and make  usr propietary
 sudo mkdir /opt/Nodes
 sudo chown $USER /opt/Nodes
-sudo mkdir /data
-sudo chown $USER /data
-#### Scripts for control location
-cd
-mkdir control
-mkdir control/defaults
-mkdir control/scripts
-echo "export CONTROL=${CONTROL}" >> ~/.bashrc
-echo "export DEFAULTS=${DEFAULTS}" >> ~/.bashrc
-echo "export CONFIGDIR=${CONFIGDIR}" >> ~/.bashrc
-echo "export DATADIR=${DATADIR}" >> ~/.bashrc
+
 sudo dd of=start.sh << 'EOF'
 #!/bin/bash
 source ~/.bashrc
 stopnode
 $NODESET/nodeos.sh "$@"
+EOF
+sudo dd of=nodeos << 'EOF'
+#!/bin/bash
+source ~/.bashrc
+$NODESET/nodeos.sh "$@"
+EOF
+sudo dd of=teclos << 'EOF'
+#!/bin/bash
+source ~/.bashrc
+$NODESET/teclos.sh "$@"
+EOF
+sudo dd of=tkeosd << 'EOF'
+#!/bin/bash
+source ~/.bashrc
+$NODESET/tkeosd.sh "$@"
 EOF
 #
 sudo dd of=stop.sh << 'EOF'
@@ -174,8 +196,9 @@ rm -rf $DATADIR/blockstemp
 rm -rf $DATADIR/statetemp
 EOF
 echo alias showlog='"tail -f ${NODESET}/tlos.log"' >> ~/.bashrc
-echo alias version='"${HOME}/NodeBranching.sh Version"' >> ~/.bashrc
-sudo chmod 777 start.sh && sudo chmod 777 stop.sh && sudo cp start.sh /usr/bin/startnode && sudo cp stop.sh /usr/bin/stopnode && sudo chmod 777 backupnode && sudo mv backupnode /usr/bin
+echo alias version='"${HOME}/Telos-Nodes/NodeBranching.sh Version"' >> ~/.bashrc
+
+sudo chmod 777 start.sh && sudo chmod 777 stop.sh && sudo mv start.sh /usr/bin/startnode && sudo mv stop.sh /usr/bin/stopnode && sudo chmod 777 backupnode && sudo mv backupnode /usr/bin && sudo chmod 777 nodeos && sudo mv nodeos /usr/bin/ && sudo chmod 777 teclos && sudo mv teclos /usr/bin/ && sudo chmod 777 tkeosd && sudo mv tkeosd /usr/bin/
 }
 function version
 {
@@ -188,7 +211,9 @@ function Wizard
 
 
 CHECKOUT=$(whiptail --inputbox "Enter Github Telos branch to build" 8 78 stage3.0 --title " Dialog" 3>&1 1>&2 2>&3); 
-WALLET=$(whiptail --inputbox "Port to use for tkeosd defaults" 8 78 8900 --title " Dialog" 3>&1 1>&2 2>&3);
+WALLET=$(whiptail --inputbox "Port to use for tkeosd" 8 78 8900 --title " Dialog" 3>&1 1>&2 2>&3);
+P2P=$(whiptail --inputbox "Port to use for P2P" 8 78 8900 --title " Dialog" 3>&1 1>&2 2>&3);
+HTTP=$(whiptail --inputbox "Port to use for HTTP" 8 78 8900 --title " Dialog" 3>&1 1>&2 2>&3);
 CONFIGDIR=$(whiptail --inputbox " Directory of your config.ini file" 8 78 /home/"$USER"/control/defaults --title " Dialog" 3>&1 1>&2 2>&3);
 DATADIR=$(whiptail --inputbox "Directory of Blocks/state" 8 78 /data --title " Dialog" 3>&1 1>&2 2>&3);
 CONTROL=$(whiptail --inputbox "Directory of control scripts" 8 78 /home/${USER}/control/scripts --title " Dialog" 3>&1 1>&2 2>&3);
