@@ -21,12 +21,14 @@ function usage
 	echo " [Initialize] first setup run once";
 	echo " [Setup] Build Nodeos and creates start and stop scripts";
 	echo " [Version] Select which version to control";
-    echo "  -a | --CHECKOUT            : git branch name";
-	echo "  -w | --WALLET            : Port to use for tkeosd defaults 8900";
-	echo "  -c | --CONFIGDIR            : Directory of your config.ini file defaults /home/"$USER"/control/defaults";
+    echo "  -a | --CHECKOUT           : git branch name";
+	echo "  -w | --WALLET             : Port to use for tkeosd defaults 8900";
+	echo "  -c | --CONFIGDIR          : Directory of your config.ini file defaults /home/"$USER"/control/defaults";
+	echo "  -p | --P2P                : Nodeos P2P Port default  9876";
+	echo "  -t | --HTTP               : Nodeos Http Port default 8888";
 	echo "  -d | --DATADIR            : Directory of Blocks/state  defaults to /data";
 	echo "  -f | --CONTROL            : Directory of control scripts defaults /home/${USER}/control/scripts";
-	echo "  -h | --help              : This message";
+	echo "  -h | --help               : This message";
 	
 }
 
@@ -104,8 +106,8 @@ git checkout $CHECKOUT
 git submodule update --init --recursive
 yes '1' | ./telos_build.sh
 mkdir $CONTROL/$CHECKOUT 
-echo "$PROGRAMS/nodeos/nodeos --config-dir ${CONFIGDIR} --data-dir ${DATADIR} " '$@' " &> "$CONTROL/$CHECKOUT/"tlos.log &  echo " '$!' " > " $CONTROL/$CHECKOUT/"nodeos.pid" >> $CONTROL/$CHECKOUT/nodeos.sh 
-echo "$PROGRAMS/teclos/teclos ---wallet-url http://127.0.0.1:${WALLET} " '$@'  >> $CONTROL/$CHECKOUT/teclos.sh
+echo "$PROGRAMS/nodeos/nodeos --p2p-listen-endpoint 0.0.0.0:${P2P} --http-server-address 127.0.0.1:${HTTP} --config-dir ${CONFIGDIR} --data-dir ${DATADIR} " '$@' " &> "$CONTROL/$CHECKOUT/"tlos.log &  echo " '$!' " > " $CONTROL/$CHECKOUT/"nodeos.pid" >> $CONTROL/$CHECKOUT/nodeos.sh 
+echo "$PROGRAMS/teclos/teclos -u http://127.0.0.1:${HTTP} ---wallet-url http://127.0.0.1:${WALLET} " '$@'  >> $CONTROL/$CHECKOUT/teclos.sh
 echo "$PROGRAMS/tkeosd/tkeosd --http-server-address http://127.0.0.1:${WALLET} " '$@' >> $CONTROL/$CHECKOUT/tkeosd.sh
 chmod +x $CONTROL/$CHECKOUT/teclos.sh $CONTROL/$CHECKOUT/nodeos.sh $CONTROL/$CHECKOUT/tkeosd.sh
 echo "export NODESET=${CONTROL}/${CHECKOUT} " >> ~/.bashrc
