@@ -19,3 +19,19 @@ usage: ./NodeBranching.sh [Initialize, Setup or Version] [OPTIONS]
   -f | --CONTROL            : Directory of control scripts defaults /home/Telos/control/scripts
   -h | --help              : This message
 
+#This Tool helps sysadmins to build and Manage diferent Telos versions
+#It will incorporate the following commands:
+#nodeos starts nodeos
+#stopnodeos stops nodeos
+#backupnode stops nodeos makes and compress backups on your $DATADIR and starts nodeos again
+#showlog outputs nodeos log created on your $NODESET directory
+#teclos script to run teclos this script can be found in $NODESET directory
+#tkeosd script to run tkeosd this script can be found in $NODESET directory
+
+Usage:
+#First we need to Setup the machine(update, upgrade, setup ntpd, etc)
+./NodeBranching.sh Initialize
+#Then we can use the wizard to build nodeos 
+./NodeBranching.sh Wizard
+#After building you can use the provided config.ini placed at your $DEFAULT directory and change respective configurations
+
