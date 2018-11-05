@@ -229,6 +229,15 @@ DATADIR=$(whiptail --inputbox "Directory of Blocks/state" 8 78 /data --title " D
 CONTROL=$(whiptail --inputbox "Directory of control scripts" 8 78 /home/${USER}/control/scripts --title " Dialog" 3>&1 1>&2 2>&3);
 
 }
+function menu
+{
+menu=$(whiptail --title "Menu" --menu "Choose an option" 25 78 5 \
+"Wizard" "Run the wizard tool." \
+"Initialize" "First run only ." \
+"Version" "Select which version to control." 3>&1 1>&2 2>&3);
+fun "$@";
+}
+
 function fun
 {
 parse_args "$@"
@@ -247,9 +256,10 @@ case $positional_1 in
      Wizard "$@";
 	 run "$@";
 	 ;;
-	 * ) usage;                 
+	 * ) menu;                 
 	 ;;
 	 esac
 }
+
 
 fun "$@";
