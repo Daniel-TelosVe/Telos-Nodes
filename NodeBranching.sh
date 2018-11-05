@@ -196,10 +196,19 @@ tar czvf $DATADIR/backup.tar.gz $DATADIR/blockstemp $DATADIR/statetemp
 rm -rf $DATADIR/blockstemp
 rm -rf $DATADIR/statetemp
 EOF
-echo alias showlog='"tail -f ${NODESET}/tlos.log"' >> ~/.bashrc
-echo alias version='"${HOME}/Telos-Nodes/NodeBranching.sh Version"' >> ~/.bashrc
+sudo dd of=showlog << 'EOF'
+#!/bin/bash
+source ~/.bashrc
+tail -f ${NODESET}/tlos.log
+EOF
+sudo dd of=version << 'EOF'
+#!/bin/bash
+source ~/.bashrc
+${HOME}/Telos-Nodes/NodeBranching.sh Version
+EOF
 
-sudo chmod 777 start.sh && sudo chmod 777 stop.sh && sudo mv start.sh /usr/bin/startnode && sudo mv stop.sh /usr/bin/stopnode && sudo chmod 777 backupnode && sudo mv backupnode /usr/bin && sudo chmod 777 nodeos && sudo mv nodeos /usr/bin/ && sudo chmod 777 teclos && sudo mv teclos /usr/bin/ && sudo chmod 777 tkeosd && sudo mv tkeosd /usr/bin/
+
+sudo chmod 777 showlog && sudo mv showlog /usr/bin/ && sudo chmod 777 version && sudo mv version /usr/bin/ && sudo chmod 777 start.sh && sudo chmod 777 stop.sh && sudo mv start.sh /usr/bin/startnode && sudo mv stop.sh /usr/bin/stopnode && sudo chmod 777 backupnode && sudo mv backupnode /usr/bin && sudo chmod 777 nodeos && sudo mv nodeos /usr/bin/ && sudo chmod 777 teclos && sudo mv teclos /usr/bin/ && sudo chmod 777 tkeosd && sudo mv tkeosd /usr/bin/
 }
 function version
 {
