@@ -231,7 +231,7 @@ CONTROL=$(whiptail --inputbox "Directory of control scripts" 8 78 /home/${USER}/
 }
 function menu
 {
-menu=$(whiptail --title "Menu" --menu "Choose an option" 25 78 5 \
+positional_1=$(whiptail --title "Menu" --menu "Choose an option" 25 78 5 \
 "Wizard" "Run the wizard tool." \
 "Initialize" "First run only ." \
 "Version" "Select which version to control." 3>&1 1>&2 2>&3);
