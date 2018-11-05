@@ -99,8 +99,8 @@ function parse_args
 function run
 {
   parse_args "$@"
-mkdir -p $CONTROL $DEFAULTS $CONFIGDIR $DATADIR
-
+sudo mkdir -p $CONTROL $DEFAULTS $CONFIGDIR $DATADIR
+sudo chown $USER $CONTROL $DEFAULTS $CONFIGDIR $DATADIR
   
 echo "export CONTROL=${CONTROL}" >> ~/.bashrc
 echo "export DEFAULTS=${DEFAULTS}" >> ~/.bashrc
