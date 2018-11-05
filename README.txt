@@ -31,7 +31,7 @@
 #showlog outputs nodeos log created on your $NODESET directory
 #teclos script to run teclos this script can be found in $NODESET directory
 #tkeosd script to run tkeosd this script can be found in $NODESET directory
-#version Wizard tool to select which nodeos version to manage
+#version Wizard tool to select which nodeos version to control
 
 Usage:
 #Clone the repository in your $HOME directory 
