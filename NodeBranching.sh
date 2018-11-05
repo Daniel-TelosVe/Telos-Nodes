@@ -227,6 +227,7 @@ HTTP=$(whiptail --inputbox "Port to use for HTTP" 8 78 8888 --title " Dialog" 3>
 CONFIGDIR=$(whiptail --inputbox " Directory of your config.ini file" 8 78 /home/"$USER"/control/defaults --title " Dialog" 3>&1 1>&2 2>&3);
 DATADIR=$(whiptail --inputbox "Directory of Blocks/state" 8 78 /data --title " Dialog" 3>&1 1>&2 2>&3);
 CONTROL=$(whiptail --inputbox "Directory of control scripts" 8 78 /home/${USER}/control/scripts --title " Dialog" 3>&1 1>&2 2>&3);
+GENESIS=$(whiptail --inputbox "URL of Genesis.json file" 8 78 http://testnet.telosfoundation.io/assets/files/genesis.json --title " Dialog" 3>&1 1>&2 2>&3);
 
 }
 function menu
