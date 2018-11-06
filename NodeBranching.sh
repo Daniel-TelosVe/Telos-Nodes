@@ -143,22 +143,22 @@ sudo dd of=start.sh << 'EOF'
 #!/bin/bash
 source ~/.nodeviroment
 stopnode
-$NODESET/nodeos.sh "$@"
+$NODESET/nodeos.sh $@
 EOF
 sudo dd of=nodeos << 'EOF'
 #!/bin/bash
 source ~/.nodeviroment
-$NODESET/nodeos.sh "$@"
+$NODESET/nodeos.sh $@
 EOF
 sudo dd of=teclos << 'EOF'
 #!/bin/bash
 source ~/.nodeviroment
-$NODESET/teclos.sh "$@"
+$NODESET/teclos.sh $@
 EOF
 sudo dd of=tkeosd << 'EOF'
 #!/bin/bash
 source ~/.nodeviroment
-$NODESET/tkeosd.sh "$@"
+$NODESET/tkeosd.sh $@
 EOF
 #
 sudo dd of=stop.sh << 'EOF'
