@@ -2,8 +2,9 @@
 #Daniel Uzcátegui
 #Telos-Venezula
 source ~/.nodeviroment
-set -e
 
+set -e
+LOC=$PWD
 function usage
 {
     echo "
@@ -21,13 +22,14 @@ function usage
 	echo " [Setup] Build Nodeos and creates start and stop scripts";
 	echo " [Version] Select which version to control";
 	echo " [Wizard] Wizard setup";
+	echo "  -i | --INSDIR             : Installation Directory defaults: /opt/Nodes";
     echo "  -a | --CHECKOUT           : git branch name";
-	echo "  -w | --WALLET             : Port to use for tkeosd defaults 8900";
-	echo "  -c | --CONFIGDIR          : Directory of your config.ini file defaults /home/"$USER"/control/defaults";
-	echo "  -p | --P2P                : Nodeos P2P Port default  9876";
-	echo "  -t | --HTTP               : Nodeos Http Port default 8888";
-	echo "  -d | --DATADIR            : Directory of Blocks/state  defaults to /data";
-	echo "  -f | --CONTROL            : Directory of control scripts defaults /home/${USER}/control/scripts";
+	echo "  -w | --WALLET             : Port to use for tkeosd defaults: 8900";
+	echo "  -c | --CONFIGDIR          : Directory of your config.ini file defaults: /home/${USER}/control/defaults";
+	echo "  -p | --P2P                : Nodeos P2P Port defaults:  9876";
+	echo "  -t | --HTTP               : Nodeos Http Port defaults: 8888";
+	echo "  -d | --DATADIR            : Directory of Blocks/state  defaults: /data";
+	echo "  -f | --CONTROL            : Directory of control scripts defaults: /home/${USER}/control/scripts";
 	echo "  -g | --GENESIS            : Genesis URL";
 	echo "  -h | --help               : This message";
 	
@@ -41,16 +43,17 @@ function parse_args
   # named args
   while [ "$1" != "" ]; do
       case "$1" in
-          -a | --CHECKOUT )               CHECKOUT="$2";             shift;;
+	      -i | --INSDIR )      INSDIR="$2";             shift;;
+          -a | --CHECKOUT )     CHECKOUT="$2";             shift;;
 		  -w | --WALLET )        WALLET="$2";      shift;;
 		  -d | --DATADIR )        DATADIR="$2";      shift;;
 		  -p | --P2P)              P2P="$2";      shift;;
 		  -t | --HTTP)              HTTP="$2";      shift;;
-		  -c | --CONFIGDIR )        CONFIGDIR="$2";      shift;;
-		  -f | --CONTROL )           CONTROL="$2";      shift;;
-		  -g | --GENESIS)             GENESIS="$2";      shift;;
+		  -c | --CONFIGDIR )         CONFIGDIR="$2";      shift;;
+		  -f | --CONTROL )            CONTROL="$2";      shift;;
+		  -g | --GENESIS)              GENESIS="$2";      shift;;
           -h | --help )                 usage;                   exit;; # quit and show usage
-          * )                           args+=("$1")             # if no match, add it to the positional args
+          * )                            args+=("$1")             # if no match, add it to the positional args
       esac
       shift # move to next kv pair
   done
@@ -71,6 +74,9 @@ function parse_args
   # set defaults
   if [[ -z "$WALLET" ]]; then
       WALLET="8900";
+  fi
+  if [[ -z "$INSDIR" ]]; then
+      INSDIR="/opt/Nodes";
   fi
   if [[ -z "${CONFIGDIR}" ]]; then
       CONFIGDIR="/home/${USER}/control/defaults";
@@ -105,7 +111,7 @@ echo "export DEFAULTS=${DEFAULTS}" >> ~/.nodeviroment
 echo "export CONFIGDIR=${CONFIGDIR}" >> ~/.nodeviroment
 echo "export DATADIR=${DATADIR}" >> ~/.nodeviroment
   
-PROGRAMS=/opt/Nodes/$CHECKOUT/build/programs
+PROGRAMS=$INSDIR/$CHECKOUT/build/programs
 
 #  echo "positional arg 1: $positional_1"
 #  echo "positional arg 2: $positional_2"
@@ -114,7 +120,7 @@ if [[ -z "${CHECKOUT}"  ]]; then
       echo "No Checkout provided so I will exit"
       exit;
 fi	  
-cd /opt/Nodes
+cd $INSDIR
 git clone --quiet --progress  https://github.com/Telos-Foundation/telos $CHECKOUT
 cd $CHECKOUT
 git checkout $CHECKOUT
@@ -131,13 +137,14 @@ wget -o $DEFAULTS/genesis.json $GENESIS
 
 function Initial
 {
+
 yes | sudo apt-get update
 yes | sudo apt-get upgrade
 sudo timedatectl set-ntp no
 yes | sudo apt-get install ntp
 ### Create Telos Home and make  usr propietary
-sudo mkdir -p /opt/Nodes
-sudo chown $USER /opt/Nodes
+sudo mkdir -p $INSDIR
+sudo chown $USER $INSDIR
 
 sudo dd of=start.sh << 'EOF'
 #!/bin/bash
@@ -194,6 +201,11 @@ tar czvf $DATADIR/backup.tar.gz $DATADIR/blockstemp $DATADIR/statetemp
 rm -rf $DATADIR/blockstemp
 rm -rf $DATADIR/statetemp
 EOF
+sudo dd of=confnode << 'EOF'
+#!/bin/bash
+source ~/.nodeviroment
+nano $DEFAULTS/config.ini
+EOF
 sudo dd of=showlog << 'EOF'
 #!/bin/bash
 source ~/.nodeviroment
@@ -202,17 +214,35 @@ EOF
 sudo dd of=version << 'EOF'
 #!/bin/bash
 source ~/.nodeviroment
-${HOME}/Telos-Nodes/NodeBranching.sh Version
+${LOC}/NodeBranching.sh Version
 EOF
 
 
-sudo chmod 777 showlog && sudo mv showlog /usr/bin/ && sudo chmod 777 version && sudo mv version /usr/bin/ && sudo chmod 777 start.sh && sudo chmod 777 stop.sh && sudo mv start.sh /usr/bin/startnode && sudo mv stop.sh /usr/bin/stopnode && sudo chmod 777 backupnode && sudo mv backupnode /usr/bin && sudo chmod 777 nodeos && sudo mv nodeos /usr/bin/ && sudo chmod 777 teclos && sudo mv teclos /usr/bin/ && sudo chmod 777 tkeosd && sudo mv tkeosd /usr/bin/
+sudo chmod 777 && sudo mv confnode /usr/bin/ && sudo chmod 777 showlog && sudo mv showlog /usr/bin/ && sudo chmod 777 version && sudo mv version /usr/bin/ && sudo chmod 777 start.sh && sudo chmod 777 stop.sh && sudo mv start.sh /usr/bin/startnode && sudo mv stop.sh /usr/bin/stopnode && sudo chmod 777 backupnode && sudo mv backupnode /usr/bin && sudo chmod 777 nodeos && sudo mv nodeos /usr/bin/ && sudo chmod 777 teclos && sudo mv teclos /usr/bin/ && sudo chmod 777 tkeosd && sudo mv tkeosd /usr/bin/
 }
 function version
 {
-	 export Directory=$(ls -lhp -1 -d $CONTROL/*/ | awk -F ' ' ' { print $9 " " $5 } ')
+	 cd $CONTROL
+	 export Directory=$(ls -lhp -1 -d */ | awk -F ' ' ' { print $9 " " $5 } ')
      export newpath=$(whiptail --menu "Select nodeos version to control" 40 50 30 --cancel-button Cancel --ok-button Select $Directory 3>&1 1>&2 2>&3)
-     echo "export NODESET=${newpath}" >> ~/.nodeviroment
+     echo "export NODESET=${CONTROL}/${newpath}" >> ~/.nodeviroment
+}
+function update
+{ 
+     cd $INSDIR
+	 export Directory=$(ls -lhp -1 -d $INSDIR/*/ | awk -F ' ' ' { print $9 " " $5 } ')
+     export newpath=$(whiptail --menu "Select version to update" 40 50 30 --cancel-button Cancel --ok-button Select $Directory 3>&1 1>&2 2>&3)
+	 CHECKOUT=$(whiptail --inputbox "Enter Github Telos branch to build" 8 78 stage3.0 --title " Dialog" 3>&1 1>&2 2>&3);
+     cd $newpath
+	 git pull
+	 git checkout $CHECKOUT
+	 git submodule update --init --recursive
+	 ./telos_build.sh
+	 cd ..
+	 mv $newpath $CHECKOUT
+	 mv $CONTROL/$newpath $CONTROL/$CHECKOUT
+	 echo "export NODESET=${CONTROL}/${newpath}" >> ~/.nodeviroment
+	 
 }
 function Wizard
 {
@@ -233,7 +263,8 @@ function menu
 positional_1=$(whiptail --title "Menu" --menu "Choose an option" 25 78 5 \
 "Wizard" "Run the wizard tool." \
 "Initialize" "First run only ." \
-"Version" "Select which version to control." 3>&1 1>&2 2>&3);
+"Version" "Select which version to control." 
+"Update"  "Select Telos version to update." 3>&1 1>&2 2>&3);
 }
 
 function fun
@@ -249,6 +280,9 @@ case $positional_1 in
 	 ;;
 	 "Version")
      version;
+	 ;;
+	 "Update")
+     update;
 	 ;;
 	 "Wizard")
      Wizard "$@";
