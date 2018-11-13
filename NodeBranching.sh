@@ -196,7 +196,7 @@ cp -r $DATADIR/blocks $DATADIR/blockstemp
 cp -r $DATADIR/state $DATADIR/statetemp
 nohup startnode &
 rm $DATADIR/backup.tar.gz.1
-mv $DATADIR/backup.tar.gz backup.tar.gz.1
+mv $DATADIR/backup.tar.gz $DATADIR/backup.tar.gz.1
 tar czvf $DATADIR/backup.tar.gz $DATADIR/blockstemp $DATADIR/statetemp
 rm -rf $DATADIR/blockstemp
 rm -rf $DATADIR/statetemp
