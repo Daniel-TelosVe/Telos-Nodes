@@ -103,8 +103,8 @@ function parse_args
 function run
 {
   parse_args "$@"
-sudo mkdir -p $CONTROL $DEFAULTS $CONFIGDIR $DATADIR
-sudo chown $USER $CONTROL $DEFAULTS $CONFIGDIR $DATADIR
+sudo mkdir -p $CONTROL $DEFAULTS $CONFIGDIR $DATADIR $INSDIR
+sudo chown $USER $CONTROL $DEFAULTS $CONFIGDIR $DATADIR $INSDIR
   
 echo "export CONTROL=${CONTROL}" >> ~/.nodeviroment
 echo "export DEFAULTS=${DEFAULTS}" >> ~/.nodeviroment
