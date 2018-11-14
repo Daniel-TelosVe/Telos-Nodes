@@ -6,21 +6,24 @@
    ╚═╝   ╚══════╝╚══════╝ ╚═════╝ ╚══════╝        ╚═══╝  ╚══════╝╚═╝  ╚═══╝╚══════╝╚══════╝ ╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝
                                            CREATING A BETTER WORLD, BLOCK BY BLOCK.                                                                                              
 
-./NodeBranching.sh [Initialize, Setup or Version] [OPTIONS]
- Positional (Initialize, Setup, Version,Wizard)
+
+./NodeBranching.sh [Initialize, Setup , Version , Wizard] [OPTIONS]
  OPTIONS:
  [Initialize] first setup run once
  [Setup] Build Nodeos and creates start and stop scripts
  [Version] Select which version to control
+ [Wizard] Wizard setup
+  -i | --INSDIR             : Installation Directory defaults: /opt/Nodes
   -a | --CHECKOUT           : git branch name
-  -w | --WALLET             : Port to use for tkeosd defaults 8900
-  -c | --CONFIGDIR          : Directory of your config.ini file defaults /home/Telos/control/defaults
-  -p | --P2P                : Nodeos P2P Port default  9876
-  -t | --HTTP               : Nodeos Http Port default 8888
-  -d | --DATADIR            : Directory of Blocks/state  defaults to /data
-  -f | --CONTROL            : Directory of control scripts defaults /home/Telos/control/scripts
+  -w | --WALLET             : Port to use for tkeosd defaults: 8900
+  -c | --CONFIGDIR          : Directory of your config.ini file defaults: /home/Telos/control/defaults
+  -p | --P2P                : Nodeos P2P Port defaults:  9876
+  -t | --HTTP               : Nodeos Http Port defaults: 8888
+  -d | --DATADIR            : Directory of Blocks/state  defaults: /data
+  -f | --CONTROL            : Directory of control scripts defaults: /home/Telos/control/scripts
   -g | --GENESIS            : Genesis URL
   -h | --help               : This message
+
 
 
 #This Tool helps sysadmins to build and Manage diferent Telos versions
