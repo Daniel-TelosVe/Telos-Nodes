@@ -217,8 +217,16 @@ source ~/.nodeviroment
 ${LOC}/NodeBranching.sh Version
 EOF
 
-
-sudo chmod 777 && sudo mv confnode /usr/bin/ && sudo chmod 777 showlog && sudo mv showlog /usr/bin/ && sudo chmod 777 version && sudo mv version /usr/bin/ && sudo chmod 777 start.sh && sudo chmod 777 stop.sh && sudo mv start.sh /usr/bin/startnode && sudo mv stop.sh /usr/bin/stopnode && sudo chmod 777 backupnode && sudo mv backupnode /usr/bin && sudo chmod 777 nodeos && sudo mv nodeos /usr/bin/ && sudo chmod 777 teclos && sudo mv teclos /usr/bin/ && sudo chmod 777 tkeosd && sudo mv tkeosd /usr/bin/
+sudo chmod +x confnode showlog version start.sh stop.sh backupnode nodeos teclos tkeosd 
+sudo mv confnode /usr/bin/ 
+sudo mv showlog /usr/bin/  
+sudo mv version /usr/bin/     
+sudo mv start.sh /usr/bin/startnode 
+sudo mv stop.sh /usr/bin/stopnode   
+sudo mv backupnode /usr/bin   
+sudo mv nodeos /usr/bin/   
+sudo mv teclos /usr/bin/   
+sudo mv tkeosd /usr/bin/
 }
 function version
 {
