@@ -145,6 +145,11 @@ yes | sudo apt-get install ntp
 ### Create Telos Home and make  usr propietary
 sudo mkdir -p $INSDIR
 sudo chown $USER $INSDIR
+sudo dd of=status << 'EOF'
+#!/bin/bash
+pgrep tkeosd | xargs printf " -p %d" | xargs lsof -Pani
+pgrep nodeos | xargs printf " -p %d" | xargs lsof -Pani
+EOF
 
 sudo dd of=start.sh << 'EOF'
 #!/bin/bash
@@ -217,7 +222,8 @@ source ~/.nodeviroment
 ${LOC}/NodeBranching.sh Version
 EOF
 
-sudo chmod +x confnode showlog version start.sh stop.sh backupnode nodeos teclos tkeosd 
+sudo chmod +x confnode showlog version start.sh stop.sh backupnode nodeos teclos tkeosd status
+sudo mv status /usr/bin/ 
 sudo mv confnode /usr/bin/ 
 sudo mv showlog /usr/bin/  
 sudo mv version /usr/bin/     
