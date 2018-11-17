@@ -1,6 +1,7 @@
 #!/bin/bash
 #Daniel Uzcátegui
-#Telos-Venezula
+#Telos-Venezuela
+echo "#" >> ~/.nodeviroment
 source ~/.nodeviroment
 
 set -e
