@@ -128,7 +128,7 @@ git checkout $CHECKOUT
 git submodule update --init --recursive
 yes '1' | ./telos_build.sh
 mkdir -p $CONTROL/$CHECKOUT 
-echo "$PROGRAMS/nodeos/nodeos --p2p-listen-endpoint 0.0.0.0:${P2P} --http-server-address 127.0.0.1:${HTTP} --config-dir ${CONFIGDIR} --data-dir ${DATADIR} " '$@' " &> "$CONTROL/$CHECKOUT/"tlos.log &  echo " '$!' " > " $CONTROL/$CHECKOUT/"nodeos.pid" >> $CONTROL/$CHECKOUT/nodeos.sh 
+echo "$PROGRAMS/nodeos/nodeos --p2p-listen-endpoint 0.0.0.0:${P2P} --http-server-address 0.0.0.0:${HTTP} --config-dir ${CONFIGDIR} --data-dir ${DATADIR} " '$@' " &> "$CONTROL/$CHECKOUT/"tlos.log &  echo " '$!' " > " $CONTROL/$CHECKOUT/"nodeos.pid" >> $CONTROL/$CHECKOUT/nodeos.sh 
 echo "$PROGRAMS/teclos/teclos -u http://127.0.0.1:${HTTP} ---wallet-url http://127.0.0.1:${WALLET} " '$@'  >> $CONTROL/$CHECKOUT/teclos.sh
 echo "$PROGRAMS/tkeosd/tkeosd --http-server-address http://127.0.0.1:${WALLET} " '$@' >> $CONTROL/$CHECKOUT/tkeosd.sh
 chmod +x $CONTROL/$CHECKOUT/teclos.sh $CONTROL/$CHECKOUT/nodeos.sh $CONTROL/$CHECKOUT/tkeosd.sh
